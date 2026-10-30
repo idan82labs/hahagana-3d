@@ -49,7 +49,7 @@
   ],
   "defaults": {
     "scenario": "proposed",
-    "pool": false,
+    "pool": true,
     "furniture": true,
     "roofs": true,
     "context": true,
