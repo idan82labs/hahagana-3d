@@ -1,21 +1,6 @@
 {
   "version": 1,
-  "title": "Hahagana 43 - existing villa + proposed two homes (TEST MODEL)",
-  "frame": {
-    "origin_itm": [
-      194963.715,
-      720367.5
-    ],
-    "u_uphill_EN": [
-      0.940179,
-      -0.34068
-    ],
-    "v_x_EN": [
-      -0.34068,
-      -0.940179
-    ],
-    "z_offset": 77
-  },
+  "title": "Ha-Hagana 43/45 — existing villa + proposed two homes",
   "files": [
     {
       "file": "site.glb",
@@ -25,7 +10,7 @@
         "SITE_Context",
         "SITE_Vegetation_Kept"
       ],
-      "bytes": 3342144
+      "bytes": 10234444
     },
     {
       "file": "veg_existing.glb",
@@ -33,7 +18,7 @@
       "layers": [
         "SITE_Vegetation_Existing"
       ],
-      "bytes": 656648
+      "bytes": 3592420
     },
     {
       "file": "existing.glb",
@@ -44,7 +29,7 @@
         "EX_Furniture",
         "EX_Pool"
       ],
-      "bytes": 4775856
+      "bytes": 22553272
     },
     {
       "file": "new.glb",
@@ -59,7 +44,7 @@
         "NEW_Pool_Optional",
         "NEW_Access"
       ],
-      "bytes": 6761252
+      "bytes": 32239216
     }
   ],
   "defaults": {
@@ -68,6 +53,88 @@
     "furniture": true,
     "roofs": true,
     "context": true,
-    "vegetation": true
-  }
+    "vegetation": true,
+    "far": true,
+    "hidden": []
+  },
+  "views": [
+    {
+      "label": "Aerial from the sea",
+      "pos": [
+        -18,
+        -62,
+        64
+      ],
+      "target": [
+        0,
+        24,
+        12
+      ]
+    },
+    {
+      "label": "New homes — seaward",
+      "pos": [
+        -14,
+        -22,
+        14
+      ],
+      "target": [
+        0,
+        10,
+        10
+      ]
+    },
+    {
+      "label": "Shared garden",
+      "pos": [
+        -6,
+        3,
+        10.2
+      ],
+      "target": [
+        4,
+        14,
+        10.3
+      ]
+    },
+    {
+      "label": "Existing pool deck",
+      "pos": [
+        -6.5,
+        25,
+        19.9
+      ],
+      "target": [
+        3,
+        40,
+        21.5
+      ]
+    },
+    {
+      "label": "Street",
+      "pos": [
+        -2,
+        72,
+        27.6
+      ],
+      "target": [
+        0,
+        40,
+        22
+      ]
+    },
+    {
+      "label": "Overhead",
+      "pos": [
+        -20,
+        10,
+        110
+      ],
+      "target": [
+        0,
+        26,
+        10
+      ]
+    }
+  ]
 }
