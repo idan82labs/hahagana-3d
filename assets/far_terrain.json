@@ -1,0 +1,16 @@
+{
+ "x0": -4200,
+ "y0": -4200,
+ "step": 30,
+ "nx": 281,
+ "ny": 281,
+ "z": "blender Z (ASL-77)",
+ "ortho": {
+  "file": "far_ortho.jpg",
+  "x0": -1800,
+  "x1": 1800,
+  "y0": -1770,
+  "y1": 1830
+ },
+ "source": "Copernicus GLO-30 DEM; texture: procedural (own work, CC0) - orthophoto removed for public build"
+}

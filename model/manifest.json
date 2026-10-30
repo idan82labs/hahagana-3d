@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "title": "Hahagana 43 - existing villa + proposed two homes (TEST MODEL)",
+  "frame": {
+    "origin_itm": [
+      194963.715,
+      720367.5
+    ],
+    "u_uphill_EN": [
+      0.940179,
+      -0.34068
+    ],
+    "v_x_EN": [
+      -0.34068,
+      -0.940179
+    ],
+    "z_offset": 77
+  },
+  "files": [
+    {
+      "file": "site.glb",
+      "group": "site",
+      "layers": [
+        "SITE_Terrain",
+        "SITE_Context",
+        "SITE_Vegetation_Kept"
+      ],
+      "bytes": 3342144
+    },
+    {
+      "file": "veg_existing.glb",
+      "group": "veg_existing",
+      "layers": [
+        "SITE_Vegetation_Existing"
+      ],
+      "bytes": 656648
+    },
+    {
+      "file": "existing.glb",
+      "group": "existing",
+      "layers": [
+        "EX_Exterior",
+        "EX_Interior",
+        "EX_Furniture",
+        "EX_Pool"
+      ],
+      "bytes": 4775856
+    },
+    {
+      "file": "new.glb",
+      "group": "new",
+      "layers": [
+        "NEW_Structure",
+        "NEW_HomeA_Interior",
+        "NEW_HomeB_Interior",
+        "NEW_Furniture",
+        "NEW_Garden",
+        "NEW_Garden_NoPool",
+        "NEW_Pool_Optional",
+        "NEW_Access"
+      ],
+      "bytes": 6761252
+    }
+  ],
+  "defaults": {
+    "scenario": "proposed",
+    "pool": false,
+    "furniture": true,
+    "roofs": true,
+    "context": true,
+    "vegetation": true
+  }
+}

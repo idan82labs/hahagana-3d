@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>Hahagana 43 · Site Viewer</title>
+<meta name="description" content="Explorable 3D model of Ha-Hagana 43, Zichron Ya'akov: existing villa, proposed two-home building, terrain and surroundings.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M3 26 L13 12 L19 19 L23 14 L29 26Z' fill='%23d8c3a5'/%3E%3Ccircle cx='23' cy='7' r='3' fill='%23f0b35a'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+<script type="importmap">
+{ "imports": {
+  "three": "./vendor/three/build/three.module.js",
+  "three/addons/": "./vendor/three/examples/jsm/",
+  "three-mesh-bvh": "./vendor/three-mesh-bvh/index.module.js"
+} }
+</script>
+<style>#creditsBar{position:absolute;left:350px;right:316px;bottom:5px;z-index:8;font:9.5px/1.3 system-ui,sans-serif;color:rgba(255,255,255,.7);text-align:center;text-shadow:0 1px 2px rgba(0,0,0,.7);pointer-events:none}@media (max-width:900px){#creditsBar{left:6px;right:6px;bottom:2px;font-size:8px}#hud{bottom:30px!important}}</style>
+</head>
+<body>
+<div id="app">
+  <canvas id="c" tabindex="0" aria-label="3D view"></canvas>
+  <div id="labels" aria-hidden="true"></div>
+  <div class="crosshair"></div>
+
+  <!-- loading -->
+  <div id="loading">
+    <div class="load-card">
+      <div class="brand">Ha-Hagana 43 <span>Zichron Ya'akov</span></div>
+      <div class="bar"><i id="loadbar"></i></div>
+      <div id="loadtext">Preparing…</div>
+    </div>
+  </div>
+
+  <!-- top-left title + mode -->
+  <header id="top">
+    <div class="title"><b>Ha-Hagana 43</b><span id="subtitle">Proposed</span></div>
+    <div class="seg" id="modeSeg" role="tablist" aria-label="Navigation mode">
+      <button data-mode="orbit" class="on" title="Orbit (O)">Orbit</button>
+      <button data-mode="walk" title="Walk (W / click)">Walk</button>
+    </div>
+    <button id="measureBtn" class="chip" title="Measure (M)" aria-pressed="false">
+      <svg viewBox="0 0 24 24"><path d="M3 17 17 3l4 4L7 21z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M7 13l2 2M10 10l2 2M13 7l2 2" stroke="currentColor" stroke-width="1.6"/></svg>
+      <span>Measure</span></button>
+    <button id="panelBtn" class="chip icon" title="Panel (P)" aria-label="Toggle panel">
+      <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8"/></svg></button>
+  </header>
+
+  <!-- compass -->
+  <div id="compass" title="North">
+    <svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="29" class="ring"/>
+      <g id="needle"><path d="M32 8 L38 32 L32 29 L26 32Z" class="n"/><path d="M32 56 L26 32 L32 35 L38 32Z" class="s"/>
+      <text x="32" y="7" text-anchor="middle" class="nl">N</text></g></svg>
+    <div id="heading">—</div>
+  </div>
+
+  <!-- HUD -->
+  <div id="hud">
+    <div id="room" class="room"></div>
+    <div class="row"><span id="elev">—</span><span id="coords"></span></div>
+    <div id="hint" class="hint"></div>
+  </div>
+
+  <!-- side panel -->
+  <aside id="panel" aria-label="Controls">
+    <section>
+      <h3>Go to</h3>
+      <select id="roomSel" aria-label="Teleport to room"><option value="">Rooms &amp; levels…</option></select>
+      <div id="views" class="chips"></div>
+    </section>
+    <section>
+      <h3>Scenario</h3>
+      <div class="seg wide" id="scenSeg">
+        <button data-s="existing">Existing condition</button>
+        <button data-s="proposed" class="on">Proposed</button>
+      </div>
+    </section>
+    <section>
+      <h3>Layers</h3>
+      <label class="tg"><input type="checkbox" id="lyPool"><span>Optional pool</span></label>
+      <label class="tg"><input type="checkbox" id="lyFurn" checked><span>Furniture</span></label>
+      <label class="tg"><input type="checkbox" id="lyRoof" checked><span>Roofs</span></label>
+      <label class="tg"><input type="checkbox" id="lyCtx" checked><span>Context buildings &amp; roads</span></label>
+      <label class="tg"><input type="checkbox" id="lyVeg" checked><span>Vegetation</span></label>
+      <label class="tg"><input type="checkbox" id="lyFar" checked><span>Distant terrain &amp; sea</span></label>
+      <button id="dollBtn" class="btn">Dollhouse view</button>
+    </section>
+    <section>
+      <h3>Cut</h3>
+      <label class="tg"><input type="checkbox" id="secOn"><span>Section along slope</span></label>
+      <div class="slider"><input type="range" id="secY" min="-5" max="62" step="0.1" value="12"><output id="secYo">y 12.0</output></div>
+      <label class="tg sub"><input type="checkbox" id="secFlip"><span>Keep uphill side</span></label>
+      <label class="lbl" for="lvlSel">Level cut (plan view)</label>
+      <select id="lvlSel"><option value="">No level cut</option></select>
+    </section>
+    <section>
+      <h3>Sun</h3>
+      <div class="sunrow"><input type="date" id="sunDate"><button id="sunPlay" class="chip icon" title="Animate day" aria-label="Animate day"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></button></div>
+      <div class="slider"><input type="range" id="sunTime" min="240" max="1260" step="5" value="900"><output id="sunTimeo">15:00</output></div>
+      <div id="sunInfo" class="mut"></div>
+    </section>
+    <section>
+      <h3>Render</h3>
+      <div class="grid2">
+        <label class="lbl">Quality<select id="qual"><option value="high">High</option><option value="balanced">Balanced</option><option value="low">Low</option></select></label>
+        <label class="lbl">Tone map<select id="tone"><option value="agx">AgX</option><option value="aces">ACES</option><option value="neutral">Neutral</option></select></label>
+        <label class="lbl">Light<select id="envSel"><option value="hdr">HDR sky</option><option value="sky">Sun-matched sky</option></select></label>
+        <label class="lbl">Exposure<input type="range" id="expo" min="-2" max="2" step="0.05" value="0"></label>
+      </div>
+      <label class="tg"><input type="checkbox" id="aoOn" checked><span>Ambient occlusion (GTAO)</span></label>
+      <label class="tg"><input type="checkbox" id="bloomOn" checked><span>Subtle bloom</span></label>
+    </section>
+    <footer class="mut">Reconstruction from sections, photos &amp; GIS — not a survey. <a href="#" id="helpLink">Keys (?)</a><br><span id="credits">Elevation: FABDEM v1-2, Univ. of Bristol, CC BY-NC-SA 4.0 · Copernicus GLO-30 DEM © DLR e.V. 2010-2014 / © Airbus DS 2014-2018, provided under COPERNICUS by the EU and ESA · furniture/textures: Poly Haven CC0 · OSM context © OpenStreetMap contributors ODbL · ground textures procedural (no aerial imagery) · non-commercial</span></footer>
+  </aside>
+
+  <!-- touch joystick -->
+  <div id="joy" aria-hidden="true"><div id="joyKnob"></div></div>
+
+  <!-- help -->
+  <div id="help" hidden>
+    <div class="help-card">
+      <h2>Controls</h2>
+      <div class="cols">
+        <div><h4>Orbit</h4>
+          <p><kbd>Drag</kbd> rotate · <kbd>Right-drag</kbd>/<kbd>Shift</kbd> pan · <kbd>Wheel</kbd> zoom</p>
+          <p><kbd>Double-click</kbd> focus a point</p></div>
+        <div><h4>Walk</h4>
+          <p><kbd>W A S D</kbd>/<kbd>arrows</kbd> move · <kbd>Mouse</kbd> look (click to lock)</p>
+          <p><kbd>Shift</kbd> run · <kbd>Space</kbd> jump · <kbd>F</kbd> fly/no-clip · <kbd>Esc</kbd> release mouse</p></div>
+        <div><h4>Anywhere</h4>
+          <p><kbd>O</kbd> orbit · <kbd>G</kbd> walk · <kbd>M</kbd> measure · <kbd>R</kbd> roofs · <kbd>L</kbd> level cut</p>
+          <p><kbd>E</kbd> existing/proposed · <kbd>[</kbd> <kbd>]</kbd> time of day · <kbd>P</kbd> panel · <kbd>?</kbd> help</p></div>
+      </div>
+      <button class="btn" id="helpClose">Close</button>
+    </div>
+  </div>
+  <div id="creditsBar">Elevation: FABDEM v1-2, Univ. of Bristol, CC BY-NC-SA 4.0 · Copernicus GLO-30 DEM © DLR e.V. 2010-2014 / © Airbus DS 2014-2018, provided under COPERNICUS by the EU and ESA · furniture/textures: Poly Haven CC0 · OSM context © OpenStreetMap contributors ODbL · ground textures procedural (no aerial imagery) · non-commercial</div>
+  <div id="toast" role="status"></div>
+</div>
+<script type="module" src="app.js"></script>
+</body>
+</html>
